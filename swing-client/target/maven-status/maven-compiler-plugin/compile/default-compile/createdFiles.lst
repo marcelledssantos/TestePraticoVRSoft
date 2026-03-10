@@ -1,0 +1,5 @@
+com/vrsoftware/client/ui/MainFrame.class
+com/vrsoftware/client/SwingApplication.class
+com/vrsoftware/client/service/ApiClient.class
+com/vrsoftware/client/model/StatusPedido.class
+com/vrsoftware/client/model/Pedido.class
