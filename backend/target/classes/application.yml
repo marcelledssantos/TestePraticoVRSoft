@@ -1,0 +1,6 @@
+spring:
+  rabbitmq:
+    addresses: amqps://bjnuffmq:gj-YQIiEXyfxQxjsZtiYDKeXIT8ppUq7@jaragua-01.lmq.cloudamqp.com/bjnuffmq
+    listener:
+      simple:
+        acknowledge-mode: manual
