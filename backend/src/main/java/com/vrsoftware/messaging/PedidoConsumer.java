@@ -29,18 +29,21 @@ public class PedidoConsumer {
         this.statusPedidoProducer = statusPedidoProducer;
     }
 
-    @RabbitListener(queues = RabbitConfig.FILA_ENTRADA)
+    @RabbitListener(
+            queues = RabbitConfig.FILA_ENTRADA,
+            containerFactory = "rabbitListenerContainerFactory"
+    )
     public void consumir(Pedido pedido,
                          Channel channel,
-                         @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) throws IOException, InterruptedException {
+                         @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag) throws IOException {
         try {
             log.info("Iniciando processamento do pedido {}", pedido.getId());
 
             service.atualizarStatus(pedido.getId(), "PROCESSANDO");
 
-            Thread.sleep((long) (1000 + Math.random() * 2000));
+            simularProcessamento();
 
-            if (Math.random() < 0.2) {
+            if (houveFalhaSimulada()) {
                 throw new ExcecaoDeProcessamento("Falha simulada no processamento do pedido");
             }
 
@@ -58,19 +61,49 @@ public class PedidoConsumer {
 
             log.info("Processamento concluído com sucesso para o pedido {}", pedido.getId());
         } catch (ExcecaoDeProcessamento ex) {
-            StatusPedido statusPedido = new StatusPedido(
-                    pedido.getId(),
-                    "FALHA",
-                    ex.getMessage(),
-                    LocalDateTime.now()
-            );
-
-            service.atualizarStatus(pedido.getId(), "FALHA", ex.getMessage());
-            statusPedidoProducer.enviarFalha(statusPedido);
-
+            tratarFalhaDeNegocio(pedido, ex);
             channel.basicReject(deliveryTag, false);
-
-            log.error("Falha no processamento do pedido {}: {}", pedido.getId(), ex.getMessage());
+        } catch (Exception ex) {
+            tratarFalhaInesperada(pedido, ex);
+            channel.basicReject(deliveryTag, false);
         }
+    }
+
+    private void simularProcessamento() throws InterruptedException {
+        Thread.sleep((long) (1000 + Math.random() * 2000));
+    }
+
+    private boolean houveFalhaSimulada() {
+        return Math.random() < 0.2;
+    }
+
+    private void tratarFalhaDeNegocio(Pedido pedido, ExcecaoDeProcessamento ex) {
+        StatusPedido statusPedido = new StatusPedido(
+                pedido.getId(),
+                "FALHA",
+                ex.getMessage(),
+                LocalDateTime.now()
+        );
+
+        service.atualizarStatus(pedido.getId(), "FALHA", ex.getMessage());
+        statusPedidoProducer.enviarFalha(statusPedido);
+
+        log.error("Falha de processamento do pedido {}: {}", pedido.getId(), ex.getMessage());
+    }
+
+    private void tratarFalhaInesperada(Pedido pedido, Exception ex) {
+        String mensagemErro = "Erro inesperado durante o processamento";
+
+        StatusPedido statusPedido = new StatusPedido(
+                pedido.getId(),
+                "FALHA",
+                mensagemErro,
+                LocalDateTime.now()
+        );
+
+        service.atualizarStatus(pedido.getId(), "FALHA", mensagemErro);
+        statusPedidoProducer.enviarFalha(statusPedido);
+
+        log.error("Erro inesperado ao processar pedido {}", pedido.getId(), ex);
     }
 }

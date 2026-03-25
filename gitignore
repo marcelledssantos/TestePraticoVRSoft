@@ -1,14 +1,54 @@
+# =========================
+# Maven / Build
+# =========================
 target/
-.idea/
-*.iml
-.vscode/
-.DS_Store
-*.log
 out/
+build/
+
+# =========================
+# Compilados Java
+# =========================
 *.class
 *.jar
 *.war
 *.ear
+
+# =========================
+# Logs
+# =========================
+*.log
+
+# =========================
+# IDEs
+# =========================
+
+## IntelliJ
+.idea/
+*.iml
+
+## VSCode
+.vscode/
+
+## Eclipse
 .settings/
 .project
 .classpath
+
+# =========================
+# Sistema Operacional
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Arquivos temporários
+# =========================
+*.tmp
+*.swp
+*.swo
+
+# =========================
+# Ambiente / Config sensível
+# =========================
+.env
+*.env

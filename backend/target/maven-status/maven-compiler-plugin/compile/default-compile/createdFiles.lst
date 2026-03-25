@@ -1,12 +1,11 @@
-com/vrsoftware/service/PedidoService.class
-com/vrsoftware/dto/PedidoRequest.class
-com/vrsoftware/config/RabbitConfig.class
-com/vrsoftware/exception/ExcecaoDeProcessamento.class
-com/vrsoftware/messaging/PedidoProducer.class
-com/vrsoftware/controller/PedidoController.class
 com/vrsoftware/model/Pedido.class
 com/vrsoftware/repository/StatusRepository.class
 com/vrsoftware/messaging/PedidoConsumer.class
+com/vrsoftware/service/PedidoService.class
+com/vrsoftware/config/RabbitConfig.class
 com/vrsoftware/messaging/StatusPedidoProducer.class
+com/vrsoftware/messaging/PedidoProducer.class
+com/vrsoftware/exception/ExcecaoDeProcessamento.class
+com/vrsoftware/controller/PedidoController.class
 com/vrsoftware/BackendApplication.class
 com/vrsoftware/model/StatusPedido.class

@@ -1,0 +1,5 @@
+src/main/java/com/vrsoftware/client/SwingApplication.java
+src/main/java/com/vrsoftware/client/model/Pedido.java
+src/main/java/com/vrsoftware/client/model/StatusPedido.java
+src/main/java/com/vrsoftware/client/service/ApiClient.java
+src/main/java/com/vrsoftware/client/ui/MainFrame.java
